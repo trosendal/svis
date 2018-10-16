@@ -14,7 +14,7 @@ tools::assertError(svis:::convert_to_sppts(df,
                                            lat = "bar"))
 rm(list = ls())
 
-## Assert warning on missing spatial references
+## Assert warning on missing spatial references in convert to sp::object
 df <- svis:::read_sample_data()
 df$Gisx[1] <- NA
 res <- tools:::assertWarning(svis:::convert_to_sppts(df,
@@ -24,4 +24,15 @@ res <- tools:::assertWarning(svis:::convert_to_sppts(df,
                                                      lat = "Gisx"))
 stopifnot(length(grep("1 of the submitted points are missing coordinates and will be discarded",
                      res[[1]]$message)) > 0)
+rm(list = ls())
+
+## Just run the convert to geojson function
+
+pts <- sample_data()
+a <- convert_to_geojson(pts)
+stopifnot(identical(class(a), "character"))
+rm(list = ls())
+
+## Assert check for sp type object in convert to geojson
+tools::assertError(convert_to_geojson("foo"))
 rm(list = ls())
