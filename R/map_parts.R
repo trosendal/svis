@@ -29,3 +29,24 @@ tiles <- function(topo = "Terr\u00E4ng",
     script <- paste(c(sources, map_call), collapse = "\n")
     html_script(script)
 }
+
+##' leaflet_css
+##'
+##' @import hlt
+##' @return An html snippet
+leaflet_css <- function() {
+    html_link(rel = "stylesheet",
+              href = "https://unpkg.com/leaflet@1.3.4/dist/leaflet.css",
+              integrity = "sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==",
+              crossorigin = "")
+}
+
+##' leaflet_js
+##' @import hlt
+##' @return An html snippet
+leaflet_js <- function() {
+    html_script(content = "",
+                src = "https://unpkg.com/leaflet@1.3.4/dist/leaflet.js",
+                integrity = "sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==",
+                crossorigin = "")
+}
