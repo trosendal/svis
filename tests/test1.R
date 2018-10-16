@@ -99,3 +99,5 @@ svis:::overlays.svis_layers(layersob)
 ## Build a map div with 1 or 2 layers
 str(map_div(layersob))
 str(map_div(layer1))
+
+page_header()
