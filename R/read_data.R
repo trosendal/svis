@@ -112,5 +112,7 @@ convert_to_geojson <- function(spatial_object) {
              layer = "main",
              driver = "GeoJSON",
              check_exists = FALSE)
-    readLines(innerfile)
+    jsondata <- readLines(innerfile)
+    class(jsondata) <- c(class(jsondata), "svis_geojson")
+    jsondata
 }

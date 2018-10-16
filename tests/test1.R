@@ -30,7 +30,7 @@ rm(list = ls())
 
 pts <- sample_data()
 a <- convert_to_geojson(pts)
-stopifnot(identical(class(a), "character"))
+stopifnot(identical(class(a), c("character", "svis_geojson")))
 rm(list = ls())
 
 ## Assert check for sp type object in convert to geojson
