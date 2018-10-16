@@ -18,4 +18,5 @@ Depends:
 RoxygenNote: 6.1.0
 Imports:
     sp,
-    rgdal
+    rgdal,
+    hlt

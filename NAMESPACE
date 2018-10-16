@@ -2,6 +2,7 @@
 
 export(convert_to_geojson)
 export(sample_data)
+import(hlt)
 importFrom(rgdal,writeOGR)
 importFrom(sp,"proj4string<-")
 importFrom(sp,SpatialPoints)
