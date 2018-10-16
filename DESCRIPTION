@@ -1,0 +1,20 @@
+Encoding: UTF-8
+Package: svis
+Title: Package to produce visualizations on the web
+Version: 0.01
+Date: 2018-10-16
+Author: Thomas Rosendal, Hyeyoung Kim
+Maintainer: Thomas Rosendal <thomas.rosendal@sva.se>
+Description: This package contains functionality to build
+    webvisualizations from R for SVA's needs. In step 1, this will
+    include a point map and in the future could include other types of
+    data summaries. There is discussion about the inclusion of
+    R-leaflet as a dependancy.
+License: GPL-3
+Type: Package
+LazyLoad: yes
+Depends:
+    R (>= 3.1.0)
+RoxygenNote: 6.1.0
+Imports:
+    hlt
