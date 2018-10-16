@@ -84,3 +84,14 @@ stopifnot(identical(names(layersob), c("layer_layer1", "layer_layer2")))
 stopifnot(length(scripts(layer1)) == 2)
 stopifnot(length(scripts(layersob)) == 4)
 rm(list = ls())
+
+## Check the building of the overlay call
+pts <- sample_data()
+a <- convert_to_geojson(pts)
+
+layer1 <- point_layer(a)
+layer2 <- point_layer(a, layer_title = "layer2")
+layersob <- layers(list(layer1, layer2))
+
+svis:::overlays.svis_layer(layer1)
+svis:::overlays.svis_layers(layersob)
