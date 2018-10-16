@@ -60,3 +60,25 @@ point_layer <- function(jsondata,
     class(object) <- "svis_layer"
     object
 }
+
+##' layers
+##'
+##' @param list_of_layers a list of svis_layer objects
+##' @export
+##' @return a svis_layers object
+layers <- function(list_of_layers) {
+
+    ## check that we have a list
+    stopifnot(identical(class(list_of_layers), "list"))
+
+    ## Check that the layers are all the class svis_layer
+    lapply(list_of_layers, function(x) {
+        stopifnot(identical(class(x), "svis_layer"))
+    })
+
+    ## Check that none of th elayers have the same name
+    stopifnot(all(!duplicated(lapply(list_of_layers, "[", "name"))))
+
+    class(list_of_layers) <- "svis_layers"
+    list_of_layers
+}

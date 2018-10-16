@@ -7,11 +7,12 @@ rm(list = ls())
 
 ## Assert names check
 df <- svis:::read_sample_data()
-tools::assertError(svis:::convert_to_sppts(df,
-                                           svis:::RT90(),
-                                           svis:::WGS84(),
-                                           long = "foo",
-                                           lat = "bar"))
+foo <- tools::assertError(svis:::convert_to_sppts(df,
+                                                  svis:::RT90(),
+                                                  svis:::WGS84(),
+                                                  long = "foo",
+                                                  lat = "bar"))
+stopifnot(identical(foo[[1]]$message, "c(lat, long) %in% names(df) are not all TRUE"))
 rm(list = ls())
 
 ## Assert warning on missing spatial references in convert to sp::object
@@ -34,7 +35,8 @@ stopifnot(identical(class(a), c("character", "svis_geojson")))
 rm(list = ls())
 
 ## Assert check for sp type object in convert to geojson
-tools::assertError(convert_to_geojson("foo"))
+foo <- tools::assertError(convert_to_geojson("foo"))
+stopifnot(identical(foo[[1]]$message, "class(spatial_object) %in% c(\"SpatialPointsDataFrame\", \"SpatialLinesDataFrame\",  .... is not TRUE"))
 rm(list = ls())
 
 ## Create a point layer
@@ -42,3 +44,24 @@ rm(list = ls())
 pts <- sample_data()
 a <- convert_to_geojson(pts)
 stopifnot(identical(class(point_layer(a)), "svis_layer"))
+
+## Make a list of those layers
+
+layer1 <- point_layer(a)
+layer2 <- point_layer(a, layer_title = "layer2")
+layers(list(layer1, layer2))
+
+## Assert that you can't submit two layers with the same name
+layer3 <- point_layer(a, layer_title = "layer2")
+foo <- tools::assertError(layers(list(layer2, layer3)))
+stopifnot(identical(foo[[1]]$message, "all(!duplicated(lapply(list_of_layers, \"[\", \"name\"))) is not TRUE"))
+## Assert that you must submitt a list to layers
+
+foo <- tools::assertError(layers(layer1))
+stopifnot(identical(foo[[1]]$message, "identical(class(list_of_layers), \"list\") is not TRUE"))
+
+## Assert that you must submitt only svis_layer class objects to layers
+
+class(layer3) <- "foo"
+foo <- tools::assertError(layers(list(layer1, layer3)))
+stopifnot(identical(foo[[1]]$message, "identical(class(x), \"svis_layer\") is not TRUE"))
