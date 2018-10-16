@@ -85,16 +85,43 @@ layers <- function(list_of_layers) {
 
 ##' names.svis_layer
 ##'
-##' @param layer a svis_layer object
+##' @param x a svis_layer object
+##' @export
 ##' @return name of the layer
-names.svis_layer <- function(layer) {
-    layer$name
+names.svis_layer <- function(x) {
+    x$name
 }
 
 ##' names.svis_layers
 ##'
-##' @param layer a svis_layers object
+##' @param x a svis_layers object
+##' @export
 ##' @return names of the layers
-names.svis_layers <- function(layers) {
-    do.call("c", lapply(layers, names.svis_layer))
+names.svis_layers <- function(x) {
+    do.call("c", lapply(x, names.svis_layer))
+}
+
+##' Get the scripts
+##'
+##' @param object A svis_layer or svis_layers object
+##' @return a list of hlt_script objects
+##' @export
+scripts <- function(object) UseMethod("scripts")
+
+##' scripts.svis_layer
+##'
+##' @param object A svis_layer object
+##' @export
+##' @return a script
+scripts.svis_layer <- function(object) {
+    object$script
+}
+
+##' scripts.svis_layers
+##'
+##' @param object a svis_layers object
+##' @export
+##' @return a list of scripts
+scripts.svis_layers <- function(object) {
+    do.call("c", lapply(object, scripts.svis_layer))
 }

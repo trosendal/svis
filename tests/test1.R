@@ -79,4 +79,8 @@ layersob <- layers(list(layer1, layer2))
 stopifnot(identical(names(layer1), "layer_layer1"))
 stopifnot(identical(names(layer2), "layer_layer2"))
 stopifnot(identical(names(layersob), c("layer_layer1", "layer_layer2")))
+
+## Check the scripts function
+stopifnot(length(scripts(layer1)) == 2)
+stopifnot(length(scripts(layersob)) == 4)
 rm(list = ls())

@@ -4,10 +4,10 @@
 \alias{names.svis_layer}
 \title{names.svis_layer}
 \usage{
-\method{names}{svis_layer}(layer)
+\method{names}{svis_layer}(x)
 }
 \arguments{
-\item{layer}{a svis_layer object}
+\item{x}{a svis_layer object}
 }
 \value{
 name of the layer
