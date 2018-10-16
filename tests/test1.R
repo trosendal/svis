@@ -97,7 +97,10 @@ svis:::overlays.svis_layer(layer1)
 svis:::overlays.svis_layers(layersob)
 
 ## Build a map div with 1 or 2 layers
-str(map_div(layersob))
-str(map_div(layer1))
 
-page_header()
+header <- page_header()
+body <- page_body(map_div(layer1))
+page <- page_page(header, body)
+
+body <- page_body(map_div(layersob))
+page <- page_page(header, body)

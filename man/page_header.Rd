@@ -6,13 +6,13 @@
 \usage{
 page_header(title = "map")
 }
+\arguments{
+\item{title}{The title of the page}
+}
 \value{
 An hlt object with the page header
 }
 \description{
-page_header
-}
-\details{
 Create some of the content in the header of the webpage with the
 leaflet map
 }
