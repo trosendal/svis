@@ -50,3 +50,15 @@ leaflet_js <- function() {
                 integrity = "sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==",
                 crossorigin = "")
 }
+
+##' onEachFeature
+##'
+##' @param name name of the function
+##' @import hlt
+##' @return A character vector
+onEachFeature <- function(name = "onEachPoint") {
+    c(paste0("function ", name, "(feature, layer) {"),
+      "var popupContent = feature.properties.popup_text;",
+      "layer.bindPopup(popupContent);",
+      "}")
+}
