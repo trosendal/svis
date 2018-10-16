@@ -82,3 +82,19 @@ layers <- function(list_of_layers) {
     class(list_of_layers) <- "svis_layers"
     list_of_layers
 }
+
+##' names.svis_layer
+##'
+##' @param layer a svis_layer object
+##' @return name of the layer
+names.svis_layer <- function(layer) {
+    layer$name
+}
+
+##' names.svis_layers
+##'
+##' @param layer a svis_layers object
+##' @return names of the layers
+names.svis_layers <- function(layers) {
+    do.call("c", lapply(layers, names.svis_layer))
+}

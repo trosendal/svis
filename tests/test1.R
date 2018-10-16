@@ -65,3 +65,18 @@ stopifnot(identical(foo[[1]]$message, "identical(class(list_of_layers), \"list\"
 class(layer3) <- "foo"
 foo <- tools::assertError(layers(list(layer1, layer3)))
 stopifnot(identical(foo[[1]]$message, "identical(class(x), \"svis_layer\") is not TRUE"))
+rm(list = ls())
+
+## Check names function of layer and layers
+
+pts <- sample_data()
+a <- convert_to_geojson(pts)
+
+layer1 <- point_layer(a)
+layer2 <- point_layer(a, layer_title = "layer2")
+layersob <- layers(list(layer1, layer2))
+
+stopifnot(identical(names(layer1), "layer_layer1"))
+stopifnot(identical(names(layer2), "layer_layer2"))
+stopifnot(identical(names(layersob), c("layer_layer1", "layer_layer2")))
+rm(list = ls())
