@@ -36,3 +36,9 @@ rm(list = ls())
 ## Assert check for sp type object in convert to geojson
 tools::assertError(convert_to_geojson("foo"))
 rm(list = ls())
+
+## Create a point layer
+
+pts <- sample_data()
+a <- convert_to_geojson(pts)
+stopifnot(identical(class(point_layer(a)), "svis_layer"))
