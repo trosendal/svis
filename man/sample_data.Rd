@@ -7,15 +7,16 @@
 sample_data()
 }
 \value{
-a data.frame
+A SpatialPointsDataFrame
 }
 \description{
-Some dummy sample data to use for a point map (or whatever)
+Get some sample data
 }
 \examples{
 \dontrun{
 # Get the data
-df <- sample_data()
-str(df)
+library(sp)
+pts <- sample_data()
+plot(pts)
 }
 }

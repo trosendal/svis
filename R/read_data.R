@@ -1,16 +1,32 @@
 ##' sample_data
 ##'
-##' Some dummy sample data to use for a point map (or whatever)
+##' Get some sample data
+##'
+##' @return A SpatialPointsDataFrame
 ##' @export
-##' @importFrom utils read.csv2
-##' @return a data.frame
 ##' @examples
 ##' \dontrun{
 ##' # Get the data
-##' df <- sample_data()
-##' str(df)
+##' library(sp)
+##' pts <- sample_data()
+##' plot(pts)
 ##' }
 sample_data <- function() {
+    df <- read_sample_data()
+    convert_to_sppts(df,
+                     RT90(),
+                     WGS84(),
+                     long = "Gisy",
+                     lat = "Gisx")
+}
+
+##' read_sample_data
+##'
+##' Some dummy sample data to use for a point map (or whatever)
+##'
+##' @importFrom utils read.csv2
+##' @return a data.frame
+read_sample_data <- function() {
     path <- system.file("extdata/sample_data_cwd.csv",
                         package = "svis")
     read.csv2(path,
@@ -18,10 +34,6 @@ sample_data <- function() {
               stringsAsFactors = FALSE,
               encoding = "UTF-8")
 }
-
-df <- sample_data()
-library(sp)
-library(rgdal)
 
 ##' sweref99
 ##'
@@ -48,4 +60,38 @@ RT90 <- function() {
 ##' @return a string
 WGS84 <- function() {
     "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+}
+
+##' convert_to_sppts
+##'
+##' Convert a data.frame with X, Y points to a spatial point
+##' data.frame
+##'
+##' @param df A data.frame that contains X and Y coordinates
+##' @param input_proj The projection of the  input
+##' @param output_proj The projection of the output
+##' @param long The name of the variable that contains the longitude
+##' @param lat The name of the variable that contains the latitude
+##' @importFrom sp spTransform
+##' @importFrom sp SpatialPoints
+##' @importFrom sp SpatialPointsDataFrame
+##' @importFrom sp "proj4string<-"
+##' @importFrom stats complete.cases
+##' @return SpatialPointsDataFrame
+convert_to_sppts <- function(df,
+                             input_proj,
+                             output_proj = WGS84(),
+                             long,
+                             lat) {
+    stopifnot(c(lat, long) %in% names(df))
+    missing_coords <- length(which(!complete.cases(df[,c(long,lat)])))
+    if(missing_coords > 0){
+        warning(paste(missing_coords, "of the submitted points are missing coordinates and will be discarded"))
+    }
+    df <- df[complete.cases(df[, c(long, lat)]),]
+    pts <- SpatialPoints(cbind(df[, long], df[, lat]))
+    proj4string(pts) <- input_proj
+    pts <- spTransform(pts, CRSobj = output_proj)
+    pts <- SpatialPointsDataFrame(pts, df)
+    return(pts)
 }
