@@ -7,9 +7,74 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-This is some text
+## Description
+
+The package can generate a simple point map with one or more layers. First we can get the sample data:
 
 ```{r}
-1+1
+library(svis)
+## Get the sample data
+pts <- sample_data()
+
+## This is a SpatialPointsDataFrame and then then be ploted with the sp package
+library(sp)
+plot(pts)
 ```
 
+This data also contains covariates in the `pts@data` slot , which describes
+each point in the data.
+
+```{r}
+str(pts@data[,1:7])
+```
+
+The map contains a function that runs on each feature that returns a popuptext.
+We need to define this in the data as a variable named `pts@data$popup_text`.
+We will put the Status of the dot in that variable so we can see that text 
+in the map popup.
+
+```{r}
+pts@data$popup_text <- pts@data$Status
+head(pts@data$Status)
+```
+
+To plot this data we need to convert it to geojson.
+
+```{r}
+a <- convert_to_geojson(pts)
+```
+
+### Make a point make with one layer
+Now we can make a layer with those points and put it in a map
+
+```{r}
+## Convert to layer objects with 2 different names:
+layer <- point_layer(a)
+
+# Generate the page header
+header <- page_header()
+
+# Map with a single layer:
+body <- page_body(map_div(layer))
+page <- page_page(header, body)
+map <- tempfile(fileext = "html")
+capture.output(page, file = map)
+```
+
+Then view the page
+```{r eval = FALSE}
+browseURL(map)
+```
+
+```{r results = 'html', echo = FALSE}
+
+## Tricky here: During the build of thé vignette, I place the map file
+## in the do folder. Then include it in an iframe as the basename(map)
+## because when you view the vignette you are working in the local
+## dir.
+map <- "../inst/doc/map1.html"
+capture.output(page, file = map)
+knitr::include_url(basename(map))
+```
+
+### Make a point map with several layers
