@@ -20,3 +20,8 @@ Imports:
     sp,
     rgdal,
     hlt
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder:
+    knitr

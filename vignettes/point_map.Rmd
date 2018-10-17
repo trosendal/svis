@@ -1,0 +1,15 @@
+---
+title: "Create a point map"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Create a point map}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+This is some text
+
+```{r}
+1+1
+```
+
