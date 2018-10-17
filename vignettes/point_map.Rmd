@@ -30,7 +30,7 @@ str(pts@data[,1:7])
 
 The map contains a function that runs on each feature that returns a popuptext.
 We need to define this in the data as a variable named `pts@data$popup_text`.
-We will put the Status of the dot in that variable so we can see that text 
+We will put the Status of the dot in that variable so we can see that text
 in the map popup.
 
 ```{r}
@@ -48,13 +48,13 @@ a <- convert_to_geojson(pts)
 Now we can make a layer with those points and put it in a map
 
 ```{r}
-## Convert to layer objects with 2 different names:
+## Convert to layer object
 layer <- point_layer(a)
 
-# Generate the page header
+## Generate the page header
 header <- page_header()
 
-# Map with a single layer:
+## Map with a single layer:
 body <- page_body(map_div(layer))
 page <- page_page(header, body)
 map <- tempfile(fileext = "html")
@@ -78,3 +78,42 @@ knitr::include_url(basename(map))
 ```
 
 ### Make a point map with several layers
+
+```{r}
+## Copy of the first object
+pts2 <- pts
+## Change the popup_text in that data
+pts2@data$popup_text <- 1:14
+b <- convert_to_geojson(pts2)
+```
+
+
+### Make a point make with one layer
+Now we can make a layer with those points and put it in a map
+
+```{r}
+## Convert to layer objects with 2 different names:
+layer1 <- point_layer(a, layer_title = "Layer 1")
+layer2 <- point_layer(b, layer_title = "Layer 2", fillColor = shQuote("#ff0000"))
+layersob <- layers(list(layer1, layer2))
+
+## Generate the page header
+header <- page_header()
+
+## Map with a single layer:
+body <- page_body(map_div(layersob))
+page <- page_page(header, body)
+map <- tempfile(fileext = "html")
+capture.output(page, file = map)
+```
+
+Then view the page
+```{r eval = FALSE}
+browseURL(map)
+```
+
+```{r results = 'html', echo = FALSE}
+map <- "../inst/doc/map2.html"
+capture.output(page, file = map)
+knitr::include_url(basename(map))
+```
