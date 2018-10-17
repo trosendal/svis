@@ -59,7 +59,7 @@ RT90 <- function() {
 ##'
 ##' @return a string
 WGS84 <- function() {
-    "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+    "+init=epsg:4326"
 }
 
 ##' convert_to_sppts
