@@ -83,7 +83,7 @@ knitr::include_url(basename(map))
 ## Copy of the first object
 pts2 <- pts
 ## Change the popup_text in that data
-pts2@data$popup_text <- 1:14
+pts2@data$popup_text <- as.character(1:14)
 b <- convert_to_geojson(pts2)
 ```
 
