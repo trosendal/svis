@@ -4,7 +4,10 @@
 \alias{sample_data}
 \title{sample_data}
 \usage{
-sample_data()
+sample_data(dataset = c("cwd", "asf"))
+}
+\arguments{
+\item{dataset}{The name of the dataset. Either "cwd" or "asf"}
 }
 \value{
 A SpatialPointsDataFrame

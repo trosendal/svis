@@ -6,7 +6,7 @@ stopifnot(identical(class(pts), structure("SpatialPointsDataFrame", package = "s
 rm(list = ls())
 
 ## Assert names check
-df <- svis:::read_sample_data()
+df <- svis:::read_sample_data_cwd()
 foo <- tools::assertError(svis:::convert_to_sppts(df,
                                                   svis:::RT90(),
                                                   svis:::WGS84(),
@@ -16,7 +16,7 @@ stopifnot(identical(foo[[1]]$message, "c(lat, long) %in% names(df) are not all T
 rm(list = ls())
 
 ## Assert warning on missing spatial references in convert to sp::object
-df <- svis:::read_sample_data()
+df <- svis:::read_sample_data_cwd()
 df$Gisx[1] <- NA
 res <- tools:::assertWarning(svis:::convert_to_sppts(df,
                                                      svis:::RT90(),
@@ -104,3 +104,6 @@ page <- page_page(header, body)
 
 body <- page_body(map_div(layersob))
 page <- page_page(header, body)
+
+## Get the asf data.
+## str(sample_data("asf"))

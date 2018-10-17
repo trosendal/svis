@@ -4,6 +4,7 @@
 ##'
 ##' @return A SpatialPointsDataFrame
 ##' @export
+##' @importFrom utils read.table
 ##' @examples
 ##' \dontrun{
 ##' # Get the data
@@ -11,25 +12,55 @@
 ##' pts <- sample_data()
 ##' plot(pts)
 ##' }
-sample_data <- function() {
-    df <- read_sample_data()
-    convert_to_sppts(df,
-                     RT90(),
-                     WGS84(),
-                     long = "Gisy",
-                     lat = "Gisx")
+##' @param dataset The name of the dataset. Either "cwd" or "asf"
+sample_data <- function(dataset = c("cwd", "asf")) {
+    dataset <- match.arg(dataset)
+    cwdfunction <- function(){
+        df <- read_sample_data_cwd()
+        convert_to_sppts(df,
+                         RT90(),
+                         WGS84(),
+                         long = "Gisy",
+                         lat = "Gisx")
+    }
+    asffunction <- function(){
+        df <- read_sample_data_asf()
+        convert_to_sppts(df,
+                         RT90(),
+                         WGS84(),
+                         long = "Gisy",
+                         lat = "Gisx")
+    }
+    switch(dataset,
+           cwd = cwdfunction(),
+           asf = asffunction())
 }
 
-##' read_sample_data
+##' read_sample_data_cwd
 ##'
 ##' Some dummy sample data to use for a point map (or whatever)
 ##'
 ##' @importFrom utils read.csv2
 ##' @return a data.frame
-read_sample_data <- function() {
+read_sample_data_cwd <- function() {
     path <- system.file("extdata/sample_data_cwd.csv",
                         package = "svis")
     read.csv2(path,
+              header = TRUE,
+              stringsAsFactors = FALSE,
+              encoding = "UTF-8")
+}
+
+##' read_sample_data_asf
+##'
+##' Some dummy sample data to use for a point map (or whatever)
+##'
+##' @importFrom utils read.csv2
+##' @return a data.frame
+read_sample_data_asf <- function() {
+    path <- system.file("extdata/E18-024_Grundrapport.csv",
+                        package = "svis")
+    read.table(path,
               header = TRUE,
               stringsAsFactors = FALSE,
               encoding = "UTF-8")
