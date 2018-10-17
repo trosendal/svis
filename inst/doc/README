@@ -1,0 +1,2 @@
+This directory gets copied to the /doc in the installed package and
+contains some of the pieces of the vignette when it gets built.
