@@ -81,9 +81,9 @@ knitr::include_url(basename(map), height = "1000px")
 
 ```{r}
 ## Copy of the first object
-pts2 <- pts
-## Change the popup_text in that data
-pts2@data$popup_text <- as.character(1:14)
+pts2 <- sample_data("asf")
+## Add some popup text
+pts2@data$popup_text <- paste(pts2@data$Kön, pts2@data$Status)
 b <- convert_to_geojson(pts2)
 ```
 
@@ -93,8 +93,8 @@ Now we can make a layer with those points and put it in a map
 
 ```{r}
 ## Convert to layer objects with 2 different names:
-layer1 <- point_layer(a, layer_title = "Layer 1")
-layer2 <- point_layer(b, layer_title = "Layer 2", fillColor = shQuote("#ff0000"))
+layer1 <- point_layer(a, layer_title = "CWD")
+layer2 <- point_layer(b, layer_title = "ASF", fillColor = shQuote("#ff0000"))
 layersob <- layers(list(layer1, layer2))
 
 ## Generate the page header
