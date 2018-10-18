@@ -60,9 +60,10 @@ read_sample_data_cwd <- function() {
 read_sample_data_asf <- function() {
     path <- system.file("extdata/E18-024_Grundrapport.csv",
                         package = "svis")
-    read.table(path,
+    a=read.csv(path,
               header = TRUE,
               stringsAsFactors = FALSE,
+              sep="\t",
               encoding = "UTF-8")
 }
 
