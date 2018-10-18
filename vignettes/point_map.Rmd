@@ -74,7 +74,7 @@ browseURL(map)
 ## dir.
 map <- "../inst/doc/map1.html"
 capture.output(page, file = map)
-knitr::include_url(basename(map))
+knitr::include_url(basename(map), height = "1000px")
 ```
 
 ### Make a point map with several layers
@@ -115,5 +115,5 @@ browseURL(map)
 ```{r results = 'html', echo = FALSE}
 map <- "../inst/doc/map2.html"
 capture.output(page, file = map)
-knitr::include_url(basename(map))
+knitr::include_url(basename(map), height = "1000px")
 ```
