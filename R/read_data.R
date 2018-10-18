@@ -55,16 +55,16 @@ read_sample_data_cwd <- function() {
 ##'
 ##' Some dummy sample data to use for a point map (or whatever)
 ##'
-##' @importFrom utils read.csv2
+##' @importFrom utils read.csv
 ##' @return a data.frame
 read_sample_data_asf <- function() {
     path <- system.file("extdata/E18-024_Grundrapport.csv",
                         package = "svis")
-    a=read.csv(path,
-              header = TRUE,
-              stringsAsFactors = FALSE,
-              sep="\t",
-              encoding = "UTF-8")
+    read.csv(path,
+             header = TRUE,
+             stringsAsFactors = FALSE,
+             sep="\t",
+             encoding = "UTF-8")
 }
 
 ##' sweref99

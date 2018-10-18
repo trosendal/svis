@@ -106,4 +106,4 @@ body <- page_body(map_div(layersob))
 page <- page_page(header, body)
 
 ## Get the asf data.
-## str(sample_data("asf"))
+str(sample_data("asf"))
