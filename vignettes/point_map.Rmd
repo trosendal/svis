@@ -7,9 +7,10 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-## Description
+## Description of generating a few point maps
 
-The package can generate a simple point map with one or more layers. First we can get the sample data:
+The package can generate a simple point map with one or more
+layers. First we can get the sample data:
 
 ```{r}
 library(svis)
@@ -88,7 +89,6 @@ b <- convert_to_geojson(pts2)
 ```
 
 
-### Make a point make with one layer
 Now we can make a layer with those points and put it in a map
 
 ```{r}
