@@ -5,10 +5,11 @@ produce a point map with an arbitrary number of point layers.
 
 ## Installation
 
-Use devtools to install the package from github list this:
+Use the remotes package to install the package and its dependency from github list this:
 
 ```{r}
-library(devtools)
+library("remotes")
+install_github("trosendal/hlt")
 install_github("trosendal/svis")
 ```
 
