@@ -5,14 +5,16 @@
 \title{layer}
 \usage{
 \method{layer}{SpatialPointsDataFrame}(data, layer_title = "layer1",
-  radius = 5, fillColor = shQuote("#00A9CE"),
-  color = shQuote("black"), weight = 1, opacity = 1,
-  fillOpacity = 1, onEach = onEachFeature(), ...)
+  byvar = NULL, col = NULL, onEach = onEachFeature(), ...)
 }
 \arguments{
 \item{data}{The dataset in sp::SpatialPointsDataFrame format}
 
 \item{layer_title}{The human readable name of the layer in the map}
+
+\item{onEach}{The name of the function to call on each feature}
+
+\item{...}{Other arguments}
 
 \item{radius}{Radius of the points (maybe a .js function call)}
 
@@ -30,10 +32,6 @@ parameter does but.. (maybe a .js function call)}
 
 \item{fillOpacity}{The opacity of the fill (maybe a .js function
 call)}
-
-\item{onEach}{The name of the function to call on each feature}
-
-\item{...}{Other arguments}
 }
 \value{
 A svis_layer

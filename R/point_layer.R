@@ -29,20 +29,42 @@ layer <- function(data, ...) UseMethod("layer")
 ##' @return A svis_layer
 layer.SpatialPointsDataFrame <- function(data,
                                          layer_title = "layer1",
-                                         radius = 5,
-                                         fillColor = shQuote("#00A9CE"),
-                                         color = shQuote("black"),
-                                         weight = 1,
-                                         opacity = 1,
-                                         fillOpacity = 1,
+                                         byvar = NULL,
+                                         col = NULL,
                                          onEach = onEachFeature(),
                                          ...){
-    ## Convert the data to json
-    jsondata <- convert_to_geojson(data)
+    ## temp vars
+    radius <- 5
+    fillColor <- shQuote("#00A9CE")
+    color <- shQuote("black")
+    weight <- 1
+    opacity <- 1
+    fillOpacity <- 1
 
     ## Add the data
     data_name <- paste0("data_", gsub(" ", "_", layer_title))
     layer_name <- paste0("layer_", gsub(" ", "_", layer_title))
+
+    ## Check that the by var is a factor
+    if(!is.null(byvar)) {
+        stopifnot(identical(class(data@data[, byvar]), "factor"))
+        ## this could be useful for the legend:
+        byvarname <- byvar
+        bylabs <- levels(data@data[, byvar])
+        byvar <- sort(unique(as.numeric(data@data[, byvar])))
+        jsbyvar <- paste0("feature.properties.", byvarname )
+    }
+    if(is.null(byvar)) {
+        jsbyvar <- "feature.id"
+    }
+
+    ## The colour of the points
+    getcol <- fillColor_js(layername = layer_name,
+                           values = byvar,
+                           col = col)
+
+    ## Convert the data to json
+    jsondata <- convert_to_geojson(data)
 
     data_load <-  html_script(c(paste(data_name, "="),
                            jsondata))
@@ -57,7 +79,7 @@ layer.SpatialPointsDataFrame <- function(data,
                "pointToLayer: function (feature, latlng) {",
                "return L.circleMarker(latlng, {",
                paste0("radius: ", as.character(radius),  ","),
-               paste0("fillColor: ",as.character(fillColor), ","),
+               paste0("fillColor: ", layer_name, "_getfillColor(", jsbyvar, "),"),
                paste0("color: ", as.character(color), ","),
                paste0("weight: ", as.character(weight), ","),
                paste0("opacity: ", as.character(opacity), ","),
@@ -65,7 +87,7 @@ layer.SpatialPointsDataFrame <- function(data,
                "});",
                "}",
                paste0("}).addTo(", layer_name, ");"))
-    script <- list(data_load, html_script(c(onEach, layer)))
+    script <- list(data_load, getcol, html_script(c(onEach, layer)))
     object <- list(name = layer_name,
                    title = layer_title,
                    script = script)
