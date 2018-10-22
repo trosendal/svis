@@ -131,7 +131,6 @@ convert_to_sppts <- function(df,
 ##' convert_to_geojson
 ##'
 ##' @importFrom rgdal writeOGR
-##' @export
 ##' @param spatial_object A sp::SpatialPointsDataFrame, sp::SpatialLinessDataFrame or sp::SpatialPolygonsDataFrame
 ##' @return A character vector
 convert_to_geojson <- function(spatial_object) {

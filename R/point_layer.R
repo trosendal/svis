@@ -1,7 +1,15 @@
-##' point_layer
+##' build a layer
 ##'
-##' @param jsondata Name of the .js file and the name of the variable
-##'     in the file
+##' @param data Currently a SpatialPointsDataFrame
+##' @param ... Arguments passed to specific layer functions for
+##'     different classes
+##' @return a svis_layer object
+##' @export
+layer <- function(data, ...) UseMethod("layer")
+
+##' layer
+##'
+##' @param data The dataset in sp::SpatialPointsDataFrame format
 ##' @param layer_title The human readable name of the layer in the map
 ##' @param radius Radius of the points (maybe a .js function call)
 ##' @param fillColor The colour to fill the points (maybe a .js
@@ -15,18 +23,22 @@
 ##' @param fillOpacity The opacity of the fill (maybe a .js function
 ##'     call)
 ##' @param onEach The name of the function to call on each feature
+##' @param ... Other arguments
 ##' @import hlt
 ##' @export
 ##' @return A svis_layer
-point_layer <- function(jsondata,
-                        layer_title = "layer1",
-                        radius = 5,
-                        fillColor = shQuote("#00A9CE"),
-                        color = shQuote("black"),
-                        weight = 1,
-                        opacity = 1,
-                        fillOpacity = 1,
-                        onEach = onEachFeature()){
+layer.SpatialPointsDataFrame <- function(data,
+                                         layer_title = "layer1",
+                                         radius = 5,
+                                         fillColor = shQuote("#00A9CE"),
+                                         color = shQuote("black"),
+                                         weight = 1,
+                                         opacity = 1,
+                                         fillOpacity = 1,
+                                         onEach = onEachFeature(),
+                                         ...){
+    ## Convert the data to json
+    jsondata <- convert_to_geojson(data)
 
     ## Add the data
     data_name <- paste0("data_", gsub(" ", "_", layer_title))

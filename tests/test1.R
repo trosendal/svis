@@ -30,29 +30,28 @@ rm(list = ls())
 ## Just run the convert to geojson function
 
 pts <- sample_data()
-a <- convert_to_geojson(pts)
+a <- svis:::convert_to_geojson(pts)
 stopifnot(identical(class(a), c("character", "svis_geojson")))
 rm(list = ls())
 
 ## Assert check for sp type object in convert to geojson
-foo <- tools::assertError(convert_to_geojson("foo"))
+foo <- tools::assertError(svis:::convert_to_geojson("foo"))
 stopifnot(identical(foo[[1]]$message, "class(spatial_object) %in% c(\"SpatialPointsDataFrame\", \"SpatialLinesDataFrame\",  .... is not TRUE"))
 rm(list = ls())
 
 ## Create a point layer
 
 pts <- sample_data()
-a <- convert_to_geojson(pts)
-stopifnot(identical(class(point_layer(a)), "svis_layer"))
+stopifnot(identical(class(layer(pts)), "svis_layer"))
 
 ## Make a list of those layers
 
-layer1 <- point_layer(a)
-layer2 <- point_layer(a, layer_title = "layer2")
+layer1 <- layer(pts)
+layer2 <- layer(pts, layer_title = "layer2")
 layers(list(layer1, layer2))
 
 ## Assert that you can't submit two layers with the same name
-layer3 <- point_layer(a, layer_title = "layer2")
+layer3 <- layer(pts, layer_title = "layer2")
 foo <- tools::assertError(layers(list(layer2, layer3)))
 stopifnot(identical(foo[[1]]$message, "all(!duplicated(lapply(list_of_layers, \"[\", \"name\"))) is not TRUE"))
 ## Assert that you must submitt a list to layers
@@ -70,10 +69,9 @@ rm(list = ls())
 ## Check names function of layer and layers
 
 pts <- sample_data()
-a <- convert_to_geojson(pts)
 
-layer1 <- point_layer(a)
-layer2 <- point_layer(a, layer_title = "layer2")
+layer1 <- layer(pts)
+layer2 <- layer(pts, layer_title = "layer2")
 layersob <- layers(list(layer1, layer2))
 
 stopifnot(identical(names(layer1), "layer_layer1"))
@@ -87,10 +85,9 @@ rm(list = ls())
 
 ## Check the building of the overlay call
 pts <- sample_data()
-a <- convert_to_geojson(pts)
 
-layer1 <- point_layer(a)
-layer2 <- point_layer(a, layer_title = "layer2")
+layer1 <- layer(pts)
+layer2 <- layer(pts, layer_title = "layer2")
 layersob <- layers(list(layer1, layer2))
 
 svis:::overlays.svis_layer(layer1)

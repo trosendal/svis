@@ -39,24 +39,18 @@ pts@data$popup_text <- pts@data$Status
 head(pts@data$Status)
 ```
 
-To plot this data we need to convert it to geojson.
-
-```{r}
-a <- convert_to_geojson(pts)
-```
-
 ### Make a point make with one layer
 Now we can make a layer with those points and put it in a map
 
 ```{r}
 ## Convert to layer object
-layer <- point_layer(a)
+layer1 <- layer(pts)
 
 ## Generate the page header
 header <- page_header()
 
 ## Map with a single layer:
-body <- page_body(map_div(layer))
+body <- page_body(map_div(layer1))
 page <- page_page(header, body)
 map <- tempfile(fileext = "html")
 capture.output(page, file = map)
@@ -84,21 +78,19 @@ knitr::include_url(basename(map), height = "1000px")
 ## The first layer
 pts <- sample_data("cwd")
 pts@data$popup_text <- pts@data$Status
-a <- convert_to_geojson(pts)
 
 ## And a second layer
 pts2 <- sample_data("asf")
 ## Add some popup text
 pts2@data$popup_text <- paste(pts2@data$Kön, pts2@data$Status)
-b <- convert_to_geojson(pts2)
 ```
 
 Now we can make a layer with those points and put it in a map
 
 ```{r}
 ## Convert to layer objects with 2 different names:
-layer1 <- point_layer(a, layer_title = "CWD")
-layer2 <- point_layer(b, layer_title = "ASF", fillColor = shQuote("#ff0000"))
+layer1 <- layer(pts, layer_title = "CWD")
+layer2 <- layer(pts2, layer_title = "ASF", fillColor = shQuote("#ff0000"))
 layersob <- layers(list(layer1, layer2))
 
 ## Generate the page header
