@@ -45,10 +45,12 @@ sample_data <- function(dataset = c("cwd", "asf")) {
 read_sample_data_cwd <- function() {
     path <- system.file("extdata/sample_data_cwd.csv",
                         package = "svis")
-    read.csv2(path,
-              header = TRUE,
-              stringsAsFactors = FALSE,
-              encoding = "UTF-8")
+    df <- read.csv2(path,
+                    header = TRUE,
+                    stringsAsFactors = FALSE,
+                    encoding = "UTF-8")
+    df$Djurslag <- factor(df$Djurslag)
+    df
 }
 
 ##' read_sample_data_asf
