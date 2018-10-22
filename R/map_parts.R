@@ -8,15 +8,15 @@
 tiles <- function(topo = "Terr\u00E4ng",
                   streets = "V\u00E4gkarta",
                   satelite = "Flygfoto") {
-    sources <- c("var streets = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {",
+    sources <- c("var streets = L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {",
                  "    maxZoom: 18,",
                  "    attribution: '&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'",
                  "}),",
-                 "    topo = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {",
+                 "    topo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {",
                  "	maxZoom: 18,",
                  "	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'",
                  "    }),",
-                 "    Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {",
+                 "    Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {",
                  "	maxZoom: 16,",
                  "	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'",
                  "    });")
@@ -61,4 +61,52 @@ onEachFeature <- function(name = "onEachPoint") {
       "var popupContent = feature.properties.popup_text;",
       "layer.bindPopup(popupContent);",
       "}")
+}
+
+##' fillColor_js
+##'
+##' @param layername the name of the layer that the function should
+##'     be applied
+##' @param values The numeric values of the factor variable to
+##'     consider
+##' @param col The colours to match with each level
+##' @param default_col The colour given to a point that doesn't meet
+##'     any of the criteria
+##' @importFrom grDevices rainbow
+##' @return An hlt script object
+fillColor_js <- function(layername,
+                         values = NULL,
+                         col = NULL,
+                         default_col = "#000000") {
+    stopifnot(identical(class(layername), "character"))
+    ## First if there is no col or value specified, just give back a
+    ## function that returns blue
+    if(is.null(values) & is.null(col)) {
+        js <- html_script(c(paste0("function ", layername, "_getfillColor(x) {"),
+                            paste0("return '#00A9CE';}")))
+        return(js)
+    }
+    stopifnot(identical(class(default_col), "character"))
+    ## If there is a colour but no values
+    if(is.null(values) & !is.null(col)) {
+        stopifnot(identical(length(col), 1L))
+        js <- html_script(c(paste0("function ", layername, "_getfillColor(x) {"),
+                            paste0("return ", shQuote(col), ";}")))
+        return(js)
+    }
+    stopifnot(class(values) %in% c("numeric", "integer"))
+    ## if col is NULL generate colours with rainbow()
+    if(is.null(col)) {
+        col <- rainbow(length(values))
+    }
+    ## check that there are not more colours than values
+    stopifnot(length(values) >= length(col))
+    stopifnot(identical(length(default_col), 1L))
+    func_name <- c(paste0("function ", layername, "_getfillColor(x) {"),
+      "return")
+    parts <- mapply(function(x, y) {
+        paste0("x == ", x, " ? ", shQuote(y), " :")
+    }, values, col)
+    default <- paste0(shQuote(default_col), ";")
+    html_script(c(func_name, parts, default))
 }
