@@ -74,9 +74,7 @@ map_div <- function(layers,
              "L.control.layers(baseLayers, overlays, {collapsed:false}).addTo(map);")
 
     ## Bundle these pieces into an html_div
-    object <- html_div(c(layerssnippet,
-                         list(html_script(c(overlays(layers), map)))),
-                       id = "map")
+    object <- html_div(c(layerssnippet, list(html_script(c(overlays(layers), map)), maplegend(layers))), id = "map")
     class(object) <- c(class(object), "svis_div")
     object
 }

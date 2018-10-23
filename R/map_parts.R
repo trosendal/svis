@@ -110,3 +110,40 @@ fillColor_js <- function(layername,
     default <- paste0(shQuote(default_col), ");}")
     html_script(c(func_name, parts, default))
 }
+
+##' maplegend
+##' @param x a layer or layers object
+##' @return An hlt script with a legend for the layer
+maplegend <- function(object) UseMethod("maplegend")
+
+
+##' maplegend
+##'
+##' @param x a svis_layer
+##' @return an hlt script
+maplegend.svis_layer <- function(x, position = "bottomright") {
+    ob <- c(paste0("var ", x$name, "_legend = L.control({position: ", shQuote(position), "});"),
+            paste0(x$name, "_legend.onAdd = function(map) {"),
+            paste0("var div = L.DomUtil.create('div', 'info legend'),"),
+            paste0("grades = ", paste0("[", paste(x$byvarnum, collapse = ","), "],")),
+            paste0("labels = ", shQuote(x$title), ","),
+            paste0("labs = [", paste(shQuote(x$bylabs), collapse = ","), "];"),
+            paste0("var index;"),
+            paste0("for (index = 0; index<", length(x$bylabs), "; ++index) {" ),
+            paste0("value = grades[index];"),
+            paste0("div.innerHTML +="),
+            paste0("'<i><div class = \"circle\" style = \"background:'", " + ", x$colfunction, "(index) + '\"></div></i> ' + labs[index] + '<br>';"),
+            paste0("}"),
+            paste0("return div;"),
+            paste0("};"),
+            paste0(x$name, "_legend.addTo(map)"))
+    html_script(ob)
+}
+
+##' maplegend
+##'
+##' @param x a svis_layers
+##' @return an hlt script
+maplegend.svis_layers <- function(x) {
+    return("Not implemented")
+}
