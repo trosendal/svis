@@ -79,8 +79,8 @@ stopifnot(identical(names(layer2), "layer_layer2"))
 stopifnot(identical(names(layersob), c("layer_layer1", "layer_layer2")))
 
 ## Check the scripts function
-stopifnot(length(scripts(layer1)) == 2)
-stopifnot(length(scripts(layersob)) == 4)
+stopifnot(length(scripts(layer1)) == 3)
+stopifnot(length(scripts(layersob)) == 6)
 rm(list = ls())
 
 ## Check the building of the overlay call

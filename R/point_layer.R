@@ -11,18 +11,13 @@ layer <- function(data, ...) UseMethod("layer")
 ##'
 ##' @param data The dataset in sp::SpatialPointsDataFrame format
 ##' @param layer_title The human readable name of the layer in the map
-##' @param radius Radius of the points (maybe a .js function call)
-##' @param fillColor The colour to fill the points (maybe a .js
-##'     function call)
-##' @param color The border colour of the points (maybe a .js function
-##'     call)
-##' @param weight The weight, actually I don't know what this
-##'     parameter does but.. (maybe a .js function call)
-##' @param opacity The opacity of the border of the points (maybe a
-##'     .js function call)
-##' @param fillOpacity The opacity of the fill (maybe a .js function
-##'     call)
-##' @param onEach The name of the function to call on each feature
+##' @param byvar The variable in the dataframe to use to colour the
+##'     points. Will be coerced into a factor. If NULL, one colour
+##'     will be used.
+##' @param col The colour(s) for the points. If you supply less
+##'     colours than the number of levels in 'byvar', the colours
+##'     will be reused. You my not supply more colours than levels in
+##'     'byvar'.
 ##' @param ... Other arguments
 ##' @import hlt
 ##' @export
@@ -31,9 +26,9 @@ layer.SpatialPointsDataFrame <- function(data,
                                          layer_title = "layer1",
                                          byvar = NULL,
                                          col = NULL,
-                                         onEach = onEachFeature(),
                                          ...){
-    ## temp vars
+    ## temp vars. These are to be implemented in same way as col is
+    ## currently. However radius may need it's own var.
     radius <- 5
     fillColor <- shQuote("#00A9CE")
     color <- shQuote("black")
@@ -47,12 +42,15 @@ layer.SpatialPointsDataFrame <- function(data,
 
     ## Check that the by var is a factor
     if(!is.null(byvar)) {
-        stopifnot(identical(class(data@data[, byvar]), "factor"))
+        data@data[, byvar] <- as.factor(data@data[, byvar])
         ## this could be useful for the legend:
         byvarname <- byvar
         bylabs <- levels(data@data[, byvar])
         byvar <- sort(unique(as.numeric(data@data[, byvar])))
         jsbyvar <- paste0("feature.properties.", byvarname )
+        ## now that we have the levels we can convert to numeric we
+        ## want in the json:
+        data@data[, byvar] <- as.numeric(data@data[, byvar])
     }
     if(is.null(byvar)) {
         jsbyvar <- "feature.id"
@@ -75,7 +73,7 @@ layer.SpatialPointsDataFrame <- function(data,
                "style: function (feature) {",
                "return feature.properties && feature.properties.style;",
                "},",
-               paste(c("onEachFeature: ", onEach, ","), collapse = ""),
+               paste(c("onEachFeature: ", onEachFeature(), ","), collapse = ""),
                "pointToLayer: function (feature, latlng) {",
                "return L.circleMarker(latlng, {",
                paste0("radius: ", as.character(radius),  ","),
@@ -87,7 +85,7 @@ layer.SpatialPointsDataFrame <- function(data,
                "});",
                "}",
                paste0("}).addTo(", layer_name, ");"))
-    script <- list(data_load, getcol, html_script(c(onEach, layer)))
+    script <- list(data_load, getcol, html_script(c(onEachFeature(), layer)))
     object <- list(name = layer_name,
                    title = layer_title,
                    script = script)

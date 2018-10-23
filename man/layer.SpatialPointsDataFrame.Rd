@@ -5,33 +5,23 @@
 \title{layer}
 \usage{
 \method{layer}{SpatialPointsDataFrame}(data, layer_title = "layer1",
-  byvar = NULL, col = NULL, onEach = onEachFeature(), ...)
+  byvar = NULL, col = NULL, ...)
 }
 \arguments{
 \item{data}{The dataset in sp::SpatialPointsDataFrame format}
 
 \item{layer_title}{The human readable name of the layer in the map}
 
-\item{onEach}{The name of the function to call on each feature}
+\item{byvar}{The variable in the dataframe to use to colour the
+points. Will be coerced into a factor. If NULL, one colour
+will be used.}
+
+\item{col}{The colour(s) for the points. If you supply less
+colours than the number of levels in 'byvar', the colours
+will be reused. You my not supply more colours than levels in
+'byvar'.}
 
 \item{...}{Other arguments}
-
-\item{radius}{Radius of the points (maybe a .js function call)}
-
-\item{fillColor}{The colour to fill the points (maybe a .js
-function call)}
-
-\item{color}{The border colour of the points (maybe a .js function
-call)}
-
-\item{weight}{The weight, actually I don't know what this
-parameter does but.. (maybe a .js function call)}
-
-\item{opacity}{The opacity of the border of the points (maybe a
-.js function call)}
-
-\item{fillOpacity}{The opacity of the fill (maybe a .js function
-call)}
 }
 \value{
 A svis_layer
