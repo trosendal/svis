@@ -132,7 +132,7 @@ maplegend.svis_layer <- function(x, position = "bottomright") {
             paste0("for (index = 0; index<", length(x$bylabs), "; ++index) {" ),
             paste0("value = grades[index];"),
             paste0("div.innerHTML +="),
-            paste0("'<i><div class = \"circle\" style = \"background:'", " + ", x$colfunction, "(index) + '\"></div></i> ' + labs[index] + '<br>';"),
+            paste0("'<i><div class = \"circle\" style = \"background:'", " + ", x$colfunction, "(grades[index]) + '\"></div></i> ' + labs[index] + '<br>';"),
             paste0("}"),
             paste0("return div;"),
             paste0("};"),
