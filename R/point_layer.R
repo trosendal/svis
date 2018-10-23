@@ -50,7 +50,7 @@ layer.SpatialPointsDataFrame <- function(data,
         jsbyvar <- paste0("feature.properties.", byvarname )
         ## now that we have the levels we can convert to numeric we
         ## want in the json:
-        data@data[, byvar] <- as.numeric(data@data[, byvar])
+        data@data[, byvarname] <- as.numeric(data@data[, byvarname])
     }
     if(is.null(byvar)) {
         jsbyvar <- "feature.id"
