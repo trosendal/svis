@@ -40,6 +40,9 @@ layer.SpatialPointsDataFrame <- function(data,
     data_name <- paste0("data_", gsub(" ", "_", layer_title))
     layer_name <- paste0("layer_", gsub(" ", "_", layer_title))
 
+    ## Get colour function name in js
+    colfunction <- paste0(layer_name, "_getfillColor")
+
     ## Check that the by var is a factor
     bylabs <- NULL
     byvarnum <- NULL
@@ -78,7 +81,7 @@ layer.SpatialPointsDataFrame <- function(data,
                "pointToLayer: function (feature, latlng) {",
                "return L.circleMarker(latlng, {",
                paste0("radius: ", as.character(radius),  ","),
-               paste0("fillColor: ", layer_name, "_getfillColor(", jsbyvar, "),"),
+               paste0("fillColor: ", colfunction, "(", jsbyvar, "),"),
                paste0("color: ", as.character(color), ","),
                paste0("weight: ", as.character(weight), ","),
                paste0("opacity: ", as.character(opacity), ","),
@@ -92,6 +95,7 @@ layer.SpatialPointsDataFrame <- function(data,
                    byvar = byvar,
                    bylabs = bylabs,
                    byvarnum = byvarnum,
+                   colfunction = colfunction,
                    script = script)
     class(object) <- "svis_layer"
     object
