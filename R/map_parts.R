@@ -103,10 +103,10 @@ fillColor_js <- function(layername,
     stopifnot(length(values) >= length(col))
     stopifnot(identical(length(default_col), 1L))
     func_name <- c(paste0("function ", layername, "_getfillColor(x) {"),
-      "return")
+      "return(")
     parts <- mapply(function(x, y) {
         paste0("x == ", x, " ? ", shQuote(y), " :")
     }, values, col)
-    default <- paste0(shQuote(default_col), ";")
+    default <- paste0(shQuote(default_col), ");}")
     html_script(c(func_name, parts, default))
 }
