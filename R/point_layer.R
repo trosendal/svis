@@ -41,16 +41,17 @@ layer.SpatialPointsDataFrame <- function(data,
     layer_name <- paste0("layer_", gsub(" ", "_", layer_title))
 
     ## Check that the by var is a factor
+    bylabs <- NULL
+    byvarnum <- NULL
     if(!is.null(byvar)) {
         data@data[, byvar] <- as.factor(data@data[, byvar])
         ## this could be useful for the legend:
-        byvarname <- byvar
         bylabs <- levels(data@data[, byvar])
-        byvar <- sort(unique(as.numeric(data@data[, byvarname])))
-        jsbyvar <- paste0("feature.properties.", byvarname )
-        ## now that we have the levels we can convert to numeric we
-        ## want in the json:
-        data@data[, byvarname] <- as.numeric(data@data[, byvarname])
+        byvarnum <- sort(unique(as.numeric(data@data[, byvar])))
+        jsbyvar <- paste0("feature.properties.", byvar)
+        ## now that we have the levels we can convert to numeric which
+        ## we want in the json:
+        data@data[, byvar] <- as.numeric(data@data[, byvar])
     }
     if(is.null(byvar)) {
         jsbyvar <- "feature.id"
@@ -58,7 +59,7 @@ layer.SpatialPointsDataFrame <- function(data,
 
     ## The colour of the points
     getcol <- fillColor_js(layername = layer_name,
-                           values = byvar,
+                           values = byvarnum,
                            col = col)
 
     ## Convert the data to json
@@ -88,6 +89,9 @@ layer.SpatialPointsDataFrame <- function(data,
     script <- list(data_load, getcol, html_script(c(onEachFeature(), layer)))
     object <- list(name = layer_name,
                    title = layer_title,
+                   byvar = byvar,
+                   bylabs = bylabs,
+                   byvarnum = byvarnum,
                    script = script)
     class(object) <- "svis_layer"
     object
