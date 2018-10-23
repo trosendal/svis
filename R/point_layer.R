@@ -46,7 +46,7 @@ layer.SpatialPointsDataFrame <- function(data,
         ## this could be useful for the legend:
         byvarname <- byvar
         bylabs <- levels(data@data[, byvar])
-        byvar <- sort(unique(as.numeric(data@data[, byvar])))
+        byvar <- sort(unique(as.numeric(data@data[, byvarname])))
         jsbyvar <- paste0("feature.properties.", byvarname )
         ## now that we have the levels we can convert to numeric we
         ## want in the json:

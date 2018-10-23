@@ -115,3 +115,28 @@ knitr::include_url(basename(map), height = "1000px")
 ```
 
 ### Make a map with multiple colours based on a variable
+
+```{r}
+pts <- sample_data()
+## Your variable of interest should be a factor
+pts@data$Djurslag <- as.factor(pts@data$Djurslag)
+## We'll put the species in the popuptext too
+pts@data$popup_text <- pts@data$Djurslag
+## Create a layer
+layer1 <- layer(pts, layer_title = "CWD", byvar = "Djurslag")
+## Plot it:
+header <- page_header()
+body <- page_body(map_div(layer1))
+page <- page_page(header, body)
+map <- tempfile(fileext = "html")
+capture.output(page, file = map)
+```
+Then view the page
+```{r eval = FALSE}
+browseURL(map)
+```
+```{r results = 'html', echo = FALSE}
+map <- "../inst/doc/map3.html"
+capture.output(page, file = map)
+knitr::include_url(basename(map), height = "1000px")
+```
