@@ -68,6 +68,42 @@ read_sample_data_asf <- function() {
              sep="\t",
              encoding = "UTF-8")
 }
+##' crs
+##'
+##' @param x A Spatial object
+##' @param ... other arguements
+##' @return One of these c("sweref99", "RT90", "WGS84")
+crs <- function(x, ...) UseMethod("crs")
+
+##' crs.SpatialPointsDataFrame
+##'
+##' @param x A SpatialPointsDataFrame
+##' @param ... other arguements
+##' @return One of these c("sweref99", "RT90", "WGS84")
+crs.SpatialPointsDataFrame <- function(x, ...) {
+    stopifnot(grepl("+init=epsg", x@proj4string@projargs))
+    matches <- regexec("+init=epsg:([0-9]*)", x@proj4string@projargs)
+    epsg <- as.numeric(regmatches(x@proj4string@projargs, matches)[[1]][2])
+    if(epsg == 4326) return("WGS84")
+    if(epsg == 3021) return("RT90")
+    if(epsg == 3006) return("sweref99")
+    stop('I only know how to handle c("sweref99", "RT90", "WGS84")')
+}
+
+##' epsg
+##'
+##' The epsg of various crs
+##'
+##' @return numeric value
+##' @param x A character
+##' @param ... other arguements
+epsg <- function(x = c("sweref99", "RT90", "WGS84")) {
+    x <- match.arg(x)
+    switch(x,
+           sweref99 = return(3006),
+           RT90 = return(3021),
+           WGS84 = return(4326))
+}
 
 ##' sweref99
 ##'
@@ -75,7 +111,7 @@ read_sample_data_asf <- function() {
 ##'
 ##' @return a string
 sweref99 <- function() {
-    "+init=epsg:3006"
+    paste0("+init=epsg:", epsg("sweref99"))
 }
 
 ##' RT90
@@ -84,7 +120,7 @@ sweref99 <- function() {
 ##'
 ##' @return a string
 RT90 <- function() {
-    "+init=epsg:3021"
+    paste0("+init=epsg:", epsg("RT90"))
 }
 
 ##' WGS84
@@ -93,7 +129,7 @@ RT90 <- function() {
 ##'
 ##' @return a string
 WGS84 <- function() {
-    "+init=epsg:4326"
+    paste0("+init=epsg:", epsg("WGS84"))
 }
 
 ##' convert_to_sppts
