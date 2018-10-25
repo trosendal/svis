@@ -27,6 +27,7 @@ format.svis_point <- function(x, ...) {
     coords <- paste0(precoord, coords, postcoord, "\n")
     props <- paste(mapply(function(x, y) {
         if(class(y) %in% c("integer", "numeric")) {
+            if(is.na(y)) y <- shQuote(y)
             return(paste0(shQuote(x), ": ", y))
         }
         paste0(shQuote(x), ": ", shQuote(y))

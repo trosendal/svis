@@ -165,23 +165,3 @@ convert_to_sppts <- function(df,
     pts <- SpatialPointsDataFrame(pts, df)
     return(pts)
 }
-
-##' convert_to_geojson
-##'
-##' @importFrom rgdal writeOGR
-##' @param spatial_object A sp::SpatialPointsDataFrame, sp::SpatialLinessDataFrame or sp::SpatialPolygonsDataFrame
-##' @return A character vector
-convert_to_geojson <- function(spatial_object) {
-    stopifnot(class(spatial_object) %in% c("SpatialPointsDataFrame",
-                                   "SpatialLinesDataFrame",
-                                   "SpatialPolygonsDataFrame"))
-    innerfile <- tempfile()
-    writeOGR(spatial_object,
-             innerfile,
-             layer = "main",
-             driver = "GeoJSON",
-             check_exists = FALSE)
-    jsondata <- readLines(innerfile)
-    class(jsondata) <- c(class(jsondata), "svis_geojson")
-    jsondata
-}

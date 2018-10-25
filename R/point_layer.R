@@ -20,6 +20,7 @@ layer <- function(data, ...) UseMethod("layer")
 ##'     'byvar'.
 ##' @param ... Other arguments
 ##' @import hlt
+##' @importFrom utils capture.output
 ##' @export
 ##' @return A svis_layer
 layer.SpatialPointsDataFrame <- function(data,
@@ -65,8 +66,8 @@ layer.SpatialPointsDataFrame <- function(data,
                            values = byvarnum,
                            col = col)
 
-    ## Convert the data to json
-    jsondata <- convert_to_geojson(data)
+    ## Convert the data to json (PHONY but just to transition to the new format)
+    jsondata <- capture.output(svis_points(data))
 
     data_load <-  html_script(c(paste(data_name, "="),
                            jsondata))

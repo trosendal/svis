@@ -27,18 +27,6 @@ stopifnot(length(grep("1 of the submitted points are missing coordinates and wil
                      res[[1]]$message)) > 0)
 rm(list = ls())
 
-## Just run the convert to geojson function
-
-pts <- sample_data()
-a <- svis:::convert_to_geojson(pts)
-stopifnot(identical(class(a), c("character", "svis_geojson")))
-rm(list = ls())
-
-## Assert check for sp type object in convert to geojson
-foo <- tools::assertError(svis:::convert_to_geojson("foo"))
-stopifnot(identical(foo[[1]]$message, "class(spatial_object) %in% c(\"SpatialPointsDataFrame\", \"SpatialLinesDataFrame\",  .... is not TRUE"))
-rm(list = ls())
-
 ## Create a point layer
 
 pts <- sample_data()
