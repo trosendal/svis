@@ -18,6 +18,7 @@ svis_point <- function(data, id) {
 ##'
 ##' @param x A svis_point
 ##' @param ... Other parameters
+##' @export
 ##' @return formated point in json
 format.svis_point <- function(x, ...) {
     coords <- paste0("[", paste(x[c("x", "y")], collapse = ", "), "]")
@@ -44,6 +45,7 @@ format.svis_point <- function(x, ...) {
 ##'
 ##' @param x A svis_point
 ##' @param ... other arguments
+##' @export
 ##' @return NULL
 print.svis_point <- function(x, ...) {
     cat(format(x, ...), "\n")
@@ -53,6 +55,7 @@ print.svis_point <- function(x, ...) {
 ##'
 ##' @param data A dataframe or spatial dataframe
 ##' @param ... Other arguments
+##' @export
 ##' @return A svis_points object
 svis_points <- function(data, ...) UseMethod("svis_points")
 
@@ -61,6 +64,7 @@ svis_points <- function(data, ...) UseMethod("svis_points")
 ##' @param data A data.frame with at least x and y and columns
 ##' @param crs The crs of the data c("sweref99", "RT90", "WGS84"). If null the function tries to guess the crs.
 ##' @param ... Other Arguments
+##' @export
 ##' @return A svis_points object
 svis_points.data.frame <- function(data, crs = NULL, ...) {
     if(is.null(crs)) {
@@ -81,6 +85,7 @@ svis_points.data.frame <- function(data, crs = NULL, ...) {
 ##' @param data A spatialPointsDataFrame
 ##' @param ... Other Arguments
 ##' @importFrom sp coordinates
+##' @export
 ##' @return A svis_points object
 svis_points.SpatialPointsDataFrame  <- function(data, ...) {
     crs <- crs(data)
@@ -94,6 +99,7 @@ svis_points.SpatialPointsDataFrame  <- function(data, ...) {
 ##'
 ##' @param x A svis_points object
 ##' @param ... Other arguments
+##' @export
 ##' @return formatted object in json
 format.svis_points <- function(x, ...) {
     obpts <- paste(lapply(x, format), collapse = ", \n")
@@ -112,8 +118,8 @@ format.svis_points <- function(x, ...) {
 ##'
 ##' @param x A svis_points object
 ##' @param ... Other arguments
+##' @export
 ##' @return NULL
-##' @author Thomas Rosendal
 print.svis_points <- function(x, ...) {
     cat(format(x, ...), "\n")
 }

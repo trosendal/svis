@@ -14,6 +14,3 @@
 \description{
 print.svis_points
 }
-\author{
-Thomas Rosendal
-}
