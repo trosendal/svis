@@ -1,6 +1,6 @@
 ##' build a layer
 ##'
-##' @param data Currently a SpatialPointsDataFrame
+##' @param data svis_points
 ##' @param ... Arguments passed to specific layer functions for
 ##'     different classes
 ##' @return a svis_layer object
@@ -9,68 +9,80 @@ layer <- function(data, ...) UseMethod("layer")
 
 ##' layer
 ##'
-##' @param data The dataset in sp::SpatialPointsDataFrame format
+##' @param data The dataset in svis_points format
 ##' @param layer_title The human readable name of the layer in the map
 ##' @param byvar The variable in the dataframe to use to colour the
 ##'     points. Will be coerced into a factor. If NULL, one colour
 ##'     will be used.
 ##' @param col The colour(s) for the points. If you supply less
-##'     colours than the number of levels in 'byvar', the colours
-##'     will be reused. You my not supply more colours than levels in
+##'     colours than the number of levels in 'byvar', the colours will
+##'     be reused. You my not supply more colours than levels in
 ##'     'byvar'.
+##' @param outline_col the Outline colour of th points
+##' @param radius The radius of the points
+##' @param fillOpacity The fill opacity of the points
+##' @param opacity The opacity of the opline of the points
 ##' @param ... Other arguments
 ##' @import hlt
-##' @importFrom utils capture.output
 ##' @export
 ##' @return A svis_layer
-layer.SpatialPointsDataFrame <- function(data,
-                                         layer_title = "layer1",
-                                         byvar = NULL,
-                                         col = NULL,
-                                         ...){
-    ## temp vars. These are to be implemented in same way as col is
-    ## currently. However radius may need it's own var.
-    radius <- 5
-    fillColor <- shQuote("#00A9CE")
-    color <- shQuote("black")
-    weight <- 1
-    opacity <- 1
-    fillOpacity <- 1
+layer.svis_points <- function(data,
+                              layer_title = "layer1",
+                              byvar = NULL,
+                              col = NULL,
+                              outline_col = NULL,
+                              radius = NULL,
+                              fillOpacity = NULL,
+                              opacity = NULL,
+                              ...) {
+    ob <- list(data)
+
+    ## Check the levels of the byvar
+    df <- as.data.frame(data)
+    if(!is.null(byvar)) {
+        stopifnot(byvar %in% names(df))
+        df[, byvar] <- as.factor(df[, byvar])
+        ## this could be useful for the legend:
+        attributes(ob)$bylabs <- levels(df[, byvar])
+    }
+
+    attributes(ob)$layer_title = layer_title
+    attributes(ob)$byvar <- byvar
+    attributes(ob)$fillColor <- col
+    attributes(ob)$color <- outline_col
+    attributes(ob)$radius <- radius
+    attributes(ob)$opacity <- opacity
+    attributes(ob)$fillOpacity <- fillOpacity
+    class(ob) <- "svis_layer"
+    ob
+}
+
+
+##' format.svis_layer
+##'
+##' @param x svis_points
+##' @param ... Other arguments
+##' @export
+format.svis_layer <- function(x, ...){
 
     ## Add the data
-    data_name <- paste0("data_", gsub(" ", "_", layer_title))
-    layer_name <- paste0("layer_", gsub(" ", "_", layer_title))
+    data_name <- paste0("data_", gsub(" ", "_", attributes(x)$layer_title))
+    layer_name <- paste0("layer_", gsub(" ", "_", attributes(x)$layer_title))
 
     ## Get colour function name in js
-    colfunction <- paste0(layer_name, "_getfillColor")
-
-    ## Check that the by var is a factor
-    bylabs <- NULL
-    byvarnum <- NULL
-    if(!is.null(byvar)) {
-        data@data[, byvar] <- as.factor(data@data[, byvar])
-        ## this could be useful for the legend:
-        bylabs <- levels(data@data[, byvar])
-        byvarnum <- sort(unique(as.numeric(data@data[, byvar])))
-        jsbyvar <- paste0("feature.properties.", byvar)
-        ## now that we have the levels we can convert to numeric which
-        ## we want in the json:
-        data@data[, byvar] <- as.numeric(data@data[, byvar])
-    }
-    if(is.null(byvar)) {
-        jsbyvar <- "feature.id"
-    }
+    colfunction <- paste0(attributes(x)$layer_name, "_getfillColor")
 
     ## The colour of the points
     getcol <- fillColor_js(layername = layer_name,
-                           values = byvarnum,
+                           values = attributes(x)$bylabs,
                            col = col)
 
-    ## Convert the data to json (PHONY but just to transition to the new format)
-    jsondata <- capture.output(svis_points(data))
+    data_load <-  format(data, name = data_name)
 
-    data_load <-  html_script(c(paste(data_name, "="),
-                           jsondata))
+    jsbyvar <-
+
+    jsbyvar <- paste0("feature.properties.", attributes(x)$byvar)
+    if(is.null(attributes(x)$byvar)) jsbyvar <- "feature.id"
 
     ## Define the layer
     layer <- c(paste("var", layer_name, "= new L.LayerGroup();"),
