@@ -94,7 +94,6 @@ fillColor_js <- function(layername,
                             paste0("return ", shQuote(col), ";}")))
         return(js)
     }
-    stopifnot(class(values) %in% c("numeric", "integer"))
     ## if col is NULL generate colours with rainbow()
     if(is.null(col)) {
         col <- rainbow(length(values))
@@ -105,7 +104,9 @@ fillColor_js <- function(layername,
     func_name <- c(paste0("function ", layername, "_getfillColor(x) {"),
       "return(")
     parts <- mapply(function(x, y) {
-        paste0("x == ", x, " ? ", shQuote(y), " :")
+        if(class(x) %in% c("numeric", "integer"))
+            return(paste0("x == ", x, " ? ", shQuote(y), " :"))
+        return(paste0("x == ", shQuote(x), " ? ", shQuote(y), " :"))
     }, values, col)
     default <- paste0(shQuote(default_col), ");}")
     html_script(c(func_name, parts, default))
