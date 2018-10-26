@@ -84,9 +84,12 @@ svis_points.data.frame <- function(data, crs = NULL, ...) {
 ##' as.data.frame.svis_points
 ##'
 ##' @param x A svis_points_object
+##' @param row.names the row names
+##' @param optional Optional arguements to the data.frame method
+##' @param ... Other arguments
 ##' @export
 ##' @return A data.frame
-as.data.frame.svis_points <- function(x) {
+as.data.frame.svis_points <- function(x, row.names, optional, ...) {
     do.call("rbind", lapply(x, function(y){
         class(y) <- "list"
         as.data.frame(y)

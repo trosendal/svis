@@ -4,10 +4,16 @@
 \alias{as.data.frame.svis_points}
 \title{as.data.frame.svis_points}
 \usage{
-\method{as.data.frame}{svis_points}(x)
+\method{as.data.frame}{svis_points}(x, row.names, optional, ...)
 }
 \arguments{
 \item{x}{A svis_points_object}
+
+\item{row.names}{the row names}
+
+\item{optional}{Optional arguements to the data.frame method}
+
+\item{...}{Other arguments}
 }
 \value{
 A data.frame
