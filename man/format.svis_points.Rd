@@ -4,10 +4,12 @@
 \alias{format.svis_points}
 \title{format.svis_points}
 \usage{
-\method{format}{svis_points}(x, ...)
+\method{format}{svis_points}(x, name = NULL, ...)
 }
 \arguments{
 \item{x}{A svis_points object}
+
+\item{name}{The variable name in the .js}
 
 \item{...}{Other arguments}
 }
