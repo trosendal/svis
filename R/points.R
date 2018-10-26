@@ -81,6 +81,17 @@ svis_points.data.frame <- function(data, crs = NULL, ...) {
     ob
 }
 
+##' as.data.frame.svis_points
+##'
+##' @param x A svis_points_object
+##' @return A data.frame
+as.data.frame.svis_points <- function(x) {
+    do.call("rbind", lapply(ob, function(x){
+        class(x) <- "list"
+        as.data.frame(x)
+    }))
+}
+
 ##' svis_points.SpatialPointsDataFrame
 ##'
 ##' @param data A spatialPointsDataFrame
@@ -99,12 +110,14 @@ svis_points.SpatialPointsDataFrame  <- function(data, ...) {
 ##' format.svis_points
 ##'
 ##' @param x A svis_points object
+##' @param name The variable name in the .js
 ##' @param ... Other arguments
 ##' @export
 ##' @return formatted object in json
-format.svis_points <- function(x, ...) {
+format.svis_points <- function(x, name = NULL, ...) {
     obpts <- paste(lapply(x, format), collapse = ", \n")
-    collection <- paste0("{\"type\": \"FeatureCollection\",\n",
+    if(!is.null(name)) name  <- paste(name, "=")
+    collection <- paste0(name, "{\"type\": \"FeatureCollection\",\n",
                          "\"name\": \"main\",\n",
                          "\"crs\": { \"type\": \"link\", \"properties\": { \"href\": \"https://spatialreference.rg/ref/epsg/",
                          attributes(x)$epsg,
