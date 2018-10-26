@@ -84,11 +84,12 @@ svis_points.data.frame <- function(data, crs = NULL, ...) {
 ##' as.data.frame.svis_points
 ##'
 ##' @param x A svis_points_object
+##' @export
 ##' @return A data.frame
 as.data.frame.svis_points <- function(x) {
-    do.call("rbind", lapply(ob, function(x){
-        class(x) <- "list"
-        as.data.frame(x)
+    do.call("rbind", lapply(x, function(y){
+        class(y) <- "list"
+        as.data.frame(y)
     }))
 }
 
