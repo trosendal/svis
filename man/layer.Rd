@@ -7,7 +7,7 @@
 layer(data, ...)
 }
 \arguments{
-\item{data}{Currently a SpatialPointsDataFrame}
+\item{data}{svis_points}
 
 \item{...}{Arguments passed to specific layer functions for
 different classes}

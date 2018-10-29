@@ -35,6 +35,8 @@ layer.svis_points <- function(data,
                               fillOpacity = NULL,
                               opacity = NULL,
                               ...) {
+    ## Just make the data a list to facilitate adding attributes at
+    ## the upper level
     ob <- list(data)
 
     ## Check the levels of the byvar
@@ -46,6 +48,7 @@ layer.svis_points <- function(data,
         attributes(ob)$bylabs <- levels(df[, byvar])
     }
 
+    ## Add attributes to layer
     attributes(ob)$layer_title = layer_title
     attributes(ob)$byvar <- byvar
     attributes(ob)$fillColor <- col
@@ -57,61 +60,147 @@ layer.svis_points <- function(data,
     ob
 }
 
+##' as.svis_points
+##'
+##' @return A svis_points object
+##' @param x another object to be coerced into a svis_points
+##' @param ... Other arguments
+as.svis_points <- function(x, ...) UseMethod("as.svis_points")
+
+##' as.svis_points.svis_layer
+##'
+##' @param x A svis_layer
+##' @param ... Other arguments
+##' @return svis_points
+as.svis_points.svis_layer <- function(x, ...) {
+    x[[1]]
+}
+
+##' data_name
+##'
+##' @param x A svis_layer
+##' @return name of the data in js
+data_name <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    paste0("data_", gsub(" ", "_", attributes(x)$layer_title))
+}
+
+##' layer_name
+##'
+##' @param x A svis_layer
+##' @return name of the layer in js
+layer_name <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    paste0("layer_", gsub(" ", "_", attributes(x)$layer_title))
+}
+
+##' colfunction
+##'
+##' @param x A svis_layer
+##' @return The name of the getcolour function in the js for the fill colour
+colfunction <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    paste0(layer_name(x), "_getfillColor")
+}
+
+##' jsbyvar
+##'
+##' @param x A svis_layer
+##' @return The name of the byvar in .js
+jsbyvar <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    if(is.null(attributes(x)$byvar)) return("feature.id")
+    paste0("feature.properties.", attributes(x)$byvar)
+}
+
+##' radius
+##'
+##' @param x A svis_layer
+##' @return The radius of the points or the name of the variable in
+##'     the data to use to determine the radius
+radius <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    return(5)
+}
+
+##' outline_color
+##'
+##' @param x A svis_layer
+##' @return The outline colour of the points or the name of the variable in
+##'     the data to use to determine the outline colour
+outline_color <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    return(shQuote("#000000"))
+}
+
+##' outline_opacity
+##'
+##' @param x A svis_layer
+##' @return The outline opacity of the points or the name of the variable in
+##'     the data to use to determine the outline opacity
+outline_opacity <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    return("1")
+}
+
+##' opacity
+##'
+##' @param x A svis_layer
+##' @return The opacity of the points of the name of the variable in
+##'     the data to use to determine the opacity
+opacity <- function(x) {
+    stopifnot(class(x) == "svis_layer")
+    return("1")
+}
 
 ##' format.svis_layer
 ##'
-##' @param x svis_points
+##' @param x svis_layer
 ##' @param ... Other arguments
 ##' @export
 format.svis_layer <- function(x, ...){
 
-    ## Add the data
-    data_name <- paste0("data_", gsub(" ", "_", attributes(x)$layer_title))
-    layer_name <- paste0("layer_", gsub(" ", "_", attributes(x)$layer_title))
-
-    ## Get colour function name in js
-    colfunction <- paste0(attributes(x)$layer_name, "_getfillColor")
-
     ## The colour of the points
-    getcol <- fillColor_js(layername = layer_name,
+    getcol <- fillColor_js(layername = layer_name(x),
                            values = attributes(x)$bylabs,
-                           col = col)
+                           col = attributes(x)$col)$content
 
-    data_load <-  format(data, name = data_name)
-
-    jsbyvar <-
-
-    jsbyvar <- paste0("feature.properties.", attributes(x)$byvar)
-    if(is.null(attributes(x)$byvar)) jsbyvar <- "feature.id"
+    data_load <- format(as.svis_points(x), name = data_name(x))
 
     ## Define the layer
-    layer <- c(paste("var", layer_name, "= new L.LayerGroup();"),
-               paste0("L.geoJson(", data_name, ",{"),
-               "style: function (feature) {",
-               "return feature.properties && feature.properties.style;",
-               "},",
-               paste(c("onEachFeature: ", onEachFeature(), ","), collapse = ""),
-               "pointToLayer: function (feature, latlng) {",
-               "return L.circleMarker(latlng, {",
-               paste0("radius: ", as.character(radius),  ","),
-               paste0("fillColor: ", colfunction, "(", jsbyvar, "),"),
-               paste0("color: ", as.character(color), ","),
-               paste0("weight: ", as.character(weight), ","),
-               paste0("opacity: ", as.character(opacity), ","),
-               paste0("fillOpacity: ", as.character(fillOpacity), ","),
-               "});",
-               "}",
-               paste0("}).addTo(", layer_name, ");"))
-    script <- list(data_load, getcol, html_script(c(onEachFeature(), layer)))
-    object <- list(name = layer_name,
-                   title = layer_title,
-                   byvar = byvar,
-                   bylabs = bylabs,
-                   byvarnum = byvarnum,
-                   colfunction = colfunction,
-                   script = script)
-    class(object) <- "svis_layer"
-    object
+    call_layer_part <- c(paste("var", layer_name(x), "= new L.LayerGroup();"),
+                         paste0("L.geoJson(", data_name(x), ",{"),
+                         "style: function (feature) {",
+                         "return feature.properties && feature.properties.style;",
+                         "},",
+                         paste(c("onEachFeature: ", onEachFeature(), ","), collapse = ""),
+                         "pointToLayer: function (feature, latlng) {",
+                         "return L.circleMarker(latlng, {",
+                         paste0("radius: ", radius(x),  ","),
+                         paste0("fillColor: ", colfunction(x), "(", jsbyvar(x), "),"),
+                         paste0("color: ", outline_color(x), ","),
+                         paste0("weight: ", "1", ","),
+                         paste0("opacity: ", outline_opacity(x), ","),
+                         paste0("fillOpacity: ", opacity(x), ","),
+                         "});",
+                         "}",
+                         paste0("}).addTo(", layer_name(x), ");"))
+
+    feature_function <- onEachFeature()
+
+    list(getcol, data_load, feature_function, call_layer_part)
+}
+
+##' print.svis_layer
+##'
+##' @param x A svis_layer
+##' @param ... Other arguments
+##' @export
+##' @return NULL
+print.svis_layer <- function(x, ...) {
+    lapply(format(x), function(y){
+        cat(y)
+    })
 }
 
 ##' layers
