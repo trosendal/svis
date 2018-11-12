@@ -1,0 +1,35 @@
+---
+title: "ASF Map"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Create a point map}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Generate point map from ASF tests done in Sweden
+
+```{r, warning = FALSE}
+library(svis)
+## Get the sample data
+pts <- sample_data("asf")
+## Define the popup text
+pts@data$popup_text <- paste(pts@data$Kön, pts@data$Status, sep = "<br>")
+## Put the data in a map layer
+body <- page_body(map_div(layer(pts,  layer_title = "ASF", fillColor = shQuote("#ff0000"))))
+## Add a page header
+page <- page_page(page_header(), body)
+## view this pag
+map <- tempfile(fileext = "html")
+capture.output(page, file = map)
+```
+
+Then view the page
+```{r eval = FALSE}
+browseURL(map)
+```
+```{r results = 'html', echo = FALSE}
+map <- "../inst/doc/map4.html"
+capture.output(page, file = map)
+knitr::include_url(basename(map), height = "1000px")
+```
