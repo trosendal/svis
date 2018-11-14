@@ -14,7 +14,7 @@ library(svis)
 ## Get the sample data
 pts <- sample_data("asf")
 ## Define the popup text
-pts@data$popup_text <- paste(pts@data$Kön, pts@data$Status, sep = "<br>")
+pts@data$popup_text <- paste(pts@data[,"K\u00F6n"], pts@data$Status, sep = "<br>")
 ## Put the data in a map layer
 body <- page_body(map_div(layer(pts,  layer_title = "ASF", fillColor = shQuote("#ff0000"))))
 ## Add a page header

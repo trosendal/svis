@@ -82,7 +82,7 @@ pts@data$popup_text <- pts@data$Status
 ## And a second layer
 pts2 <- sample_data("asf")
 ## Add some popup text
-pts2@data$popup_text <- paste(pts2@data$Kön, pts2@data$Status)
+pts2@data$popup_text <- paste(pts2@data[,"K\u00F6n"], pts2@data$Status)
 ```
 
 Now we can make a layer with those points and put it in a map
