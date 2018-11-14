@@ -1,7 +1,7 @@
 Encoding: UTF-8
 Package: svis
 Title: Package to produce visualizations on the web
-Version: 0.01
+Version: 0.1.1
 Date: 2018-10-16
 Author: Thomas Rosendal, Hyeyoung Kim
 Maintainer: Thomas Rosendal <thomas.rosendal@sva.se>
