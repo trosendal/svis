@@ -14,12 +14,7 @@ jobs:
 
       - name: Check package
         run: |
-          # sudo dnf --assumeyes install ansible
-          pwd
-          ls -la
-          cd ..
-          pwd
-          ls -la
+          sudo dnf --assumeyes install git
           git clone https://github.com/stewid/ansible-r-ci.git
           curl -OLs https://stewid.github.io/ansible-r-ci/r-ci.yml
           ansible-playbook -i localhost, r-ci.yml
