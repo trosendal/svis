@@ -14,7 +14,7 @@ jobs:
 
       - name: Check package
         run: |
-          sudo dnf --assumeyes install ansible
+          # sudo dnf --assumeyes install ansible
           pwd
           ls -la
           cd ..
