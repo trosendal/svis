@@ -16,6 +16,6 @@ jobs:
         run: |
           sudo dnf --assumeyes install git ansible
           git clone https://github.com/stewid/ansible-r-ci.git ../ansible-r-ci
-          git -C ../ansible-r-ci checkout master
+          git --git-dir=../ansible-r-ci/.git --work-tree=../ansible-r-ci/ checkout main
           cp ../ansible-r-ci/r.ci.yml .
           ansible-playbook -i localhost, r-ci.yml
