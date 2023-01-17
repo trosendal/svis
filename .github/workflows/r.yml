@@ -12,9 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Check package
+      - name: Install dependancies
         run: |
           sudo dnf --assumeyes install git ansible
           git clone https://github.com/stewid/ansible-r-ci.git ../ansible-r-ci
           git --git-dir=../ansible-r-ci/.git --work-tree=../ansible-r-ci/ checkout main
-          ansible-playbook -i localhost, ../ansible-r-ci/r-ci.yml
+
+      - name: Check package
+        run: ansible-playbook -i localhost, ../ansible-r-ci/r-ci.yml
+        
